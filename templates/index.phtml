@@ -57,50 +57,21 @@
  		</div>
 
  	    <ul data-am-widget="gallery" class="am-gallery am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-gallery-default product">
+
+            <?php  foreach ($data as $k => $v) {?>
  		      <li>
  		        <div class="am-gallery-item">
- 		            <a href="/detail/2" class="">
- 		              <img src="images/p.png"  alt=""/>
- 		              <h3 class="am-gallery-title">商务单人餐</h3>
+ 		            <a href="/detail/<?=$v->id?>" class="">
+ 		              <img src="<?=$v->img_url?>"  alt=""/>
+ 		              <h3 class="am-gallery-title"><?=$v->name?></h3>
  		              <div class="am-gallery-desc">
- 		              	<em>￥50</em><i class="am-icon-cart-plus"></i>
+ 		              	<em>￥<?=$v->unit_price?></em><i class="am-icon-cart-plus"></i>
  		              </div>
  		            </a>
  		        </div>
  		      </li>
- 		      <li>
- 		        <div class="am-gallery-item">
- 		            <a href="detail.html" class="">
- 		              <img src="images/p1.png"  alt=""/>
- 		                <h3 class="am-gallery-title">虐狗情人杯</h3>
- 		                <div class="am-gallery-desc">
- 		                	<em>￥50</em><i class="am-icon-cart-plus"></i>
- 		                </div>
- 		            </a>
- 		        </div>
- 		      </li>
- 		      <li>
- 		        <div class="am-gallery-item">
- 		            <a href="detail.html" class="">
- 		              <img src="images/p2.png"  alt=""/>
- 		                <h3 class="am-gallery-title">卤香滑鸡 </h3>
- 		                <div class="am-gallery-desc">
- 		                	<em>￥50</em><i class="am-icon-cart-plus"></i>
- 		                </div>
- 		            </a>
- 		        </div>
- 		      </li>
- 		      <li>
- 		        <div class="am-gallery-item">
- 		            <a href="detail.html" class="">
- 		              <img src="images/p3.png"  alt=""/>
- 		                <h3 class="am-gallery-title">酷炫绵绵球</h3>
- 		                <div class="am-gallery-desc">
- 		                	<em>￥50</em><i class="am-icon-cart-plus"></i>
- 		                </div>
- 		            </a>
- 		        </div>
- 		      </li>
+              <?php }?>
+
  		 </ul>
 <!-- 菜单 -->
 

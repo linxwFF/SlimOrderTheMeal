@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>购物车</title>
+		<meta name="description" content="购物车" />
+		<meta name="keywords" content="购物车"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" href="/css/amazeui.min.css" />
+		<link rel="stylesheet" href="/css/style.css" />
+		<script type="text/javascript" src="/js/jquery.min.js" ></script>
+		<script type="text/javascript" src="/js/amazeui.min.js" ></script>
+	</head>
+	<body>
+		<header data-am-widget="header" class="am-header am-header-default header">
+		  <div class="am-header-left am-header-nav">
+		     <a href="/" class="">
+		       <i class="am-header-icon am-icon-angle-left"></i>
+		     </a>
+		  </div>
+		  <h1 class="am-header-title"> <a href="#title-link" class="" style="color: #333;">全部商品</a></h1>
+		  <div class="am-header-right am-header-nav">
+		     <a href="#right-link" class=""> </a>
+		  </div>
+	  </header>
+
+        <?php
+        $count_money = 0;
+        if(is_array($data)){
+        foreach($data as $k=>$v){?>
+
+		<div class="c-comment-list" style="border: 0;">
+			<a class="o-con" href="">
+            	<div class="o-con-img"><img src="<?= $v['goods_detail']->img_url ?>"></div>
+                <div class="o-con-txt">
+                	<p><?= $v['goods_detail']->name ?></p>
+                    <p>单价：<span> ￥<?= $v['goods_detail']->unit_price ?></span></p>
+                	<p>合计：<span> ￥<?= $v['total']?></span></p>
+                </div>
+            	<div class="o-con-much"> <h4 style="color:red"> x <?= $v['goods_num'] ?></h4></div>
+            </a>
+		</div>
+
+        <?php
+        $count_money += $v['total'];
+        }} ?>
+
+        <ul class="fixed-btn" style="height: 100px;">
+            <div class="c-com-money">花 <?= $count ?>个商品 实付金额：<span>￥ <?= sprintf("%.2f", $count_money) ?></span></div>
+			<li><a href="javascript:;" class="current" onclick="add_order(1)">确认订餐</a></li>
+			<li><a href="javascript:;"  >重新点餐</a></li>
+		</ul>
+
+		<div class="clear"></div>
+
+        <script>
+            function add_order(id)
+            {
+                $.ajax({
+                type: "POST",
+                url: "/addOrder/"+id,
+                success: function(data){
+                        alert(data);
+                        window.location.href='/listOrder/1';
+                    }
+                });
+            }
+        </script>
+	</body>
+</html>

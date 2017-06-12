@@ -3,7 +3,7 @@
 
 $container = $app->getContainer();
 
-// view renderer
+// view renderer  注册视图的组件
 $container['renderer'] = function ($c) {
     $settings = $c->get('settings')['renderer'];
     return new Slim\Views\PhpRenderer($settings['template_path']);
@@ -32,6 +32,14 @@ $container['db'] = function ($container) {
 
 // 传递数据表实例到控制器
 $container['WidgetController'] = function ($c) {
-    $table = $c->get('db')->table('user');
-    return new \App\Controllers\WidgetController($table);
+    $table = $c->get('db')->table('menu');
+    $renderer = $c->get('renderer');    //获取容器中的视图组件
+    return new \App\Controllers\WidgetController($table, $renderer);
+};
+
+
+$container['OrderTheMealController'] = function ($c) {
+    $table = $c->get('db')->table('menu');
+    $renderer = $c->get('renderer');    //获取容器中的视图组件
+    return new \App\Controllers\OrderTheMealController($table, $renderer);  //通过构造方法的注入视图组件
 };
