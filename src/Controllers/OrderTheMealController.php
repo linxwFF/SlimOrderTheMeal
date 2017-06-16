@@ -8,10 +8,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Illuminate\Database\Query\Builder;
 use App\Models\Order as Order;
 use App\Models\Menu as Menu;
+use App\Models\OrderList as OrderList;
 
 class OrderTheMealController
 {
     private $renderer;
+    // private static $_SESSION
 
     public function __construct(PhpRenderer $renderer)
     {
@@ -35,20 +37,23 @@ class OrderTheMealController
     //加入购物车
     public function addCar($request, $response, $args)
     {
-        $seat = 1;  //座位号
         $goodId = $args['id'];    //商品ID
-        $arr = $_SESSION['shop_cart'][$seat] ? $_SESSION['shop_cart'][$seat] : [];
 
-        if (array_key_exists($goodId, $arr)) {
+        $arr = @$_SESSION['shop_cart'];
+
+        if (@array_key_exists($goodId, $arr)) {
             //该商品添加过购物车，进行数量加1的操作
             $a = $arr[$goodId]['goods_num'] ++;
             // echo '存在该商品' . $arr[$goodId]['goods_num']."<br/>";
         } else {
             //该商品为新商品添加到购物车
             //arr0为要添加已存在购物车数组arr的新购物车数组
+            //菜单信息
+            $goods_detail = Menu::find($goodId);
             $arr0 = [
                 $goodId => [
                     'goods_num' => 1, //商品数量
+                    'goods_detail' => $goods_detail,
                 ]
             ];
 
@@ -57,12 +62,13 @@ class OrderTheMealController
             }
         }
 
-        $_SESSION['shop_cart'][$seat] = $arr;
+        $_SESSION['shop_cart'] = $arr;
 
         // session_destroy();
-        echo "1";
 
+        return $response->withJson($_SESSION['shop_cart']); //返回购物车信息
     }
+
     //删除购物车
     public function delCar($request, $response, $args)
     {
@@ -72,54 +78,61 @@ class OrderTheMealController
     //显示购物车内容
     public function showCar($request, $response, $args)
     {
-        $data = $_SESSION['shop_cart'][$args['seat']];     //购物车信息
-        $count = 0;
+        $data = @$_SESSION['shop_cart'];     //购物车信息
+
+        $count = 0; //商品总数量
+        $tatal = 0; //商品总价钱
 
         if(isset($data)){
-            $ids = array_keys($data);   //获取IDs
-            $goods_detail = Menu::whereIn('id', $ids)->get();
             foreach ($data as $key => $value) {
-                foreach ($goods_detail as $kk => $vv) {
-                    if($vv->id == $key){
-                        $data[$key]['goods_detail'] = $vv;
-                        $data[$key]['total'] = sprintf("%.2f", $vv->unit_price * $value['goods_num']);
-                    }
-                }
                 $count += $value['goods_num'];
+                $data[$key]['total'] = sprintf("%.2f", $value['goods_detail']->unit_price * $value['goods_num']);
+                $tatal += $value['goods_detail']->unit_price;
             }
-            $_SESSION['shop_cart'][$args['seat']] = $data;
         }
 
-        return $this->renderer->render($response, 'car.phtml', ['data' => $data ,'count' => $count]);
+        $_SESSION['shop_cart'] = $data;
+        // return $response->withJson($data); //返回购物车信息
+
+        return $this->renderer->render($response, 'car.phtml', ['data' => $data ,'count' => $count, 'tatal' => sprintf('%.2f', $tatal)]);
     }
 
     //根据购物车生成订单
     public function addOrder($request, $response, $args)
     {
-        $data = $_SESSION['shop_cart'][$args['seat']];
-        $seat_id = $args['seat'];
-        foreach ($data as $key => $value) {
-            $menu_id = $key;
-            $goods_num = $value['goods_num'];
+        $data = @$_SESSION['shop_cart'];
 
+        if(isset($data)){
             $order = new Order;
-            $order->seat_id = $seat_id;
-            $order->menu_id = $menu_id;
-            $order->goods_num = $goods_num;
-            $order->status = 0; //代表没有确认
+            $order->user_id = 1;
+            $order->status = 0;
             $order->save();
+            $order_id = $order['id'];
+
+            foreach ($data as $key => $value) {
+                $order_list = new OrderList;
+                $order_list->order_id = $order_id;
+                $order_list->name = $value['goods_detail']['name'];
+                $order_list->number = $value['goods_num'];
+                $order_list->price = $value['goods_detail']['unit_price'];
+                $order_list->total_price = $value['total'];
+                $order_list->save();
+            }
+
+            $msg = "添加成功";
+        }else{
+            $msg = "没有数据无法添加";
         }
 
         //清除购物车
-        session_destroy();
+        unset($_SESSION['shop_cart']);
 
-        echo "提交订单成功";
+        return $response->withStatus(201)->withJson($msg); //返回购物车信息  201 Created
     }
 
     // 订单列表
     public function listOrder($request, $response, $args)
     {
-        $seat = $args['seat'];
         $list = Order::where('seat_id',$seat)->where('status', 0)->get()->toArray();
 
         return $this->renderer->render($response, 'order.phtml', ['data' => $list]);

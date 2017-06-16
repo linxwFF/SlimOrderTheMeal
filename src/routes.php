@@ -5,16 +5,17 @@
 $app->get('/', 'OrderTheMealController:index');
 // 点击首页的餐品，进入餐品详细页面
 $app->get('/detail/[{id}]', 'OrderTheMealController:detail');
+
 //添加购物车
 $app->post('/addCar/[{id}]', 'OrderTheMealController:addCar');
 //删除购物车
 $app->post('/delCar/[{id}]', 'OrderTheMealController:delCar');
 // 显示购物车    //根据座位
-$app->get('/showCar/[{seat}]', 'OrderTheMealController:showCar');
+$app->get('/showCar', 'OrderTheMealController:showCar');
 // 生成购物订单
-$app->post('/addOrder/[{seat}]', 'OrderTheMealController:addOrder');
+$app->post('/addOrder', 'OrderTheMealController:addOrder');
 // 订单列表
-$app->get('/listOrder/[{seat}]', 'OrderTheMealController:listOrder');
+$app->get('/listOrder', 'OrderTheMealController:listOrder');
 
 
 // 文章
