@@ -12,25 +12,23 @@ use App\Models\Menu as Menu;
 class OrderTheMealController
 {
     private $renderer;
-    private $table;
 
-    public function __construct(Builder $table, PhpRenderer $renderer)
+    public function __construct(PhpRenderer $renderer)
     {
-        $this->table = $table;
         $this->renderer = $renderer;
     }
 
     //首页
     public function index($request, $response)
     {
-        $data = $this->table->get();
+        $data = Menu::get();
         return $this->renderer->render($response, 'index.phtml', ['data' => $data]);
     }
 
     //商品详细页
     public function detail($request, $response, $args)
     {
-        $data = $this->table->find($args['id']);
+        $data = Menu::find($args['id']);
         return $this->renderer->render($response, 'detail.phtml', ['data' => $data]);
     }
 
@@ -79,7 +77,7 @@ class OrderTheMealController
 
         if(isset($data)){
             $ids = array_keys($data);   //获取IDs
-            $goods_detail = $this->table->whereIn('id', $ids)->get();
+            $goods_detail = Menu::whereIn('id', $ids)->get();
             foreach ($data as $key => $value) {
                 foreach ($goods_detail as $kk => $vv) {
                     if($vv->id == $key){
@@ -118,12 +116,12 @@ class OrderTheMealController
         echo "提交订单成功";
     }
 
-    // 列表
+    // 订单列表
     public function listOrder($request, $response, $args)
     {
         $seat = $args['seat'];
         $list = Order::where('seat_id',$seat)->where('status', 0)->get()->toArray();
-        
+
         return $this->renderer->render($response, 'order.phtml', ['data' => $list]);
     }
 

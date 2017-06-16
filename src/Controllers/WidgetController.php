@@ -6,21 +6,20 @@ use Slim\Views\PhpRenderer;
 use Illuminate\Database\Query\Builder;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use App\Models\Menu as Menu;
 
 class WidgetController
 {
-    protected $table;
     private $renderer;
 
-    public function __construct(Builder $table, PhpRenderer $renderer)
+    public function __construct(PhpRenderer $renderer)
     {
-        $this->table = $table;
         $this->renderer = $renderer;
     }
 
     public function getTest($request, $response, $args)
     {
-        $record = $this->table->find(1);
+        $record = Menu::all()->toArray();
         print_r($record);
     }
 }

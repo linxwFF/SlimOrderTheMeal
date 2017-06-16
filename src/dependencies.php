@@ -18,8 +18,8 @@ $container['logger'] = function ($c) {
     return $logger;
 };
 
-
-// Service factory for the ORM
+/*
+// Service factory for the ORM   //懒汉式调用   //要曾经调用过才会有这个实例在内存里
 $container['db'] = function ($container) {
     $capsule = new \Illuminate\Database\Capsule\Manager;    //实例化一个ORM类
     $capsule->addConnection($container['settings']['db']);  //创建连接
@@ -29,17 +29,26 @@ $container['db'] = function ($container) {
 
     return $capsule;
 };
+*/
+
+$capsule = new \Illuminate\Database\Capsule\Manager;    //实例化一个ORM类
+$capsule->addConnection($container['settings']['db']);  //创建连接
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+$container['db'] = function ($container) {
+    global $capsule;
+    return $capsule;
+};
+
 
 // 传递数据表实例到控制器
 $container['WidgetController'] = function ($c) {
-    $table = $c->get('db')->table('menu');
     $renderer = $c->get('renderer');    //获取容器中的视图组件
-    return new \App\Controllers\WidgetController($table, $renderer);
+    return new \App\Controllers\WidgetController($renderer);
 };
 
 
 $container['OrderTheMealController'] = function ($c) {
-    $table = $c->get('db')->table('menu');
     $renderer = $c->get('renderer');    //获取容器中的视图组件
-    return new \App\Controllers\OrderTheMealController($table, $renderer);  //通过构造方法的注入视图组件
+    return new \App\Controllers\OrderTheMealController($renderer);  //通过构造方法的注入视图组件
 };
