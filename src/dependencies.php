@@ -52,3 +52,8 @@ $container['OrderTheMealController'] = function ($c) {
     $renderer = $c->get('renderer');    //获取容器中的视图组件
     return new \App\Controllers\OrderTheMealController($renderer);  //通过构造方法的注入视图组件
 };
+
+$container['SearchController'] = function ($c) {
+    $renderer = $c->get('renderer');    //获取容器中的视图组件
+    return new \App\Controllers\SearchController($renderer);  //通过构造方法的注入视图组件
+};

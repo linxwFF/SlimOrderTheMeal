@@ -11,6 +11,45 @@
 		<script type="text/javascript" src="js/jquery.min.js" ></script>
 		<script type="text/javascript" src="js/amazeui.min.js" ></script>
 	</head>
+    <style>
+
+    .search{
+        display: block;
+        width: 64%;
+        height: 3.5rem;
+         line-height: 3.5rem;
+         text-indent: 1rem;
+         position: absolute;
+         left: 5%;
+         top:18rem;
+         background-size:100% 100%;
+        }
+    .search_btn{
+        display: block;
+        width: 25%;
+        height: 3.5rem;
+         line-height: 3.5rem;
+         text-indent: 1rem;
+         position: absolute;
+         right: 5%;
+         top:18rem;
+        background: url(../images/search_btn.png);
+    }
+
+    </style>
+    <script>
+        function add_order(id)
+        {
+            $.ajax({
+            type: "POST",
+            url: "/addOrder",
+            success: function(data){
+                    alert(data);
+                    window.location.href='/listOrder/1';
+                }
+            });
+        }
+    </script>
 	<body>
 		<div data-am-widget="slider" class="am-slider am-slider-default" data-am-slider='{}' >
 			  <ul class="am-slides">
@@ -18,12 +57,17 @@
 			      <li><img src="images/banner1.jpg"> </li>
 			  </ul>
 		</div>
-		<a href="search.html" class="search">
-			开启你的美食之旅...
-		</a>
+
+        <form method="post" action="search">
+            <div class="input-group">
+              <input type="text" class="form-control search" placeholder="开启你的美食之旅..." name="keywords">
+              <input type="submit" class="search_btn" value=""/>
+            </div>
+        </form>
+
 		<ul class="nav">
 			<li>
-				<a href="search.html">
+				<a href="category/1">
 					<img src="images/icon.jpg" />
 					<p>最新推荐</p>
 				</a>
@@ -71,6 +115,20 @@
  		        </div>
  		      </li>
               <?php }?>
+
+              <li>
+ 		        <div class="am-gallery-item">
+ 		            <a href="/detail/1" class="">
+ 		              <img src="/images/p.png" alt="">
+                    </a>
+
+ 		              <h3 class="am-gallery-title">单身狗套餐</h3>
+ 		              <div class="am-gallery-desc">
+ 		              	<em>￥100.00</em><i class="am-icon-cart-plus"></i>
+ 		              </div>
+
+ 		        </div>
+ 		      </li>
 
  		 </ul>
 <!-- 菜单 -->

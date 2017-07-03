@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Models\Menu as Menu;
 
-class WidgetController
+class WidgetController extends BaseController
 {
     private $renderer;
 

@@ -131,11 +131,28 @@ class OrderTheMealController
     }
 
     // 订单列表
-    public function listOrder($request, $response, $args)
+    public function listOrder($request, $response)
     {
-        $list = Order::where('seat_id',$seat)->where('status', 0)->get()->toArray();
-
+        $user_id = 1;
+        // $list = Order::where('user_id', $user_id)->where('status', 0)->get()->toArray();
+        $list = Order::where('user_id', $user_id)->get()->toArray();
+        return $response->withJson($list);
         return $this->renderer->render($response, 'order.phtml', ['data' => $list]);
     }
 
+    // 更改订单状态
+    public function changeStatus($request, $response, $args)
+    {
+        $id = $args['id'];
+        $item = Order::find($id);
+        $item->status = 1;
+
+        if($item->save()){
+            $result = [];
+            $result['status'] = 201;
+            $result['data']['message'] = '更新成功';
+            $result['data']['item'] = array('id' => $item['id'], 'created_at' => $item['created_at'], 'updated_at' => $item['updated_at']);
+        }
+        return $response->withJson($result);
+    }
 }

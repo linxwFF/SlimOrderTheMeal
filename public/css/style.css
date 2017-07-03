@@ -11,7 +11,7 @@ li{ list-style-type: none;}
 .am-slider-default .am-control-nav{ display: none;}
 .am-direction-nav{ display: none;}
 .am-slider-default{ margin: 0;}
-.search{display: block; width: 90%; height: 3.5rem; line-height: 3.5rem; text-indent: 1rem; position: absolute; left: 5%; top:18rem; background: url(../images/search.png) no-repeat; background-size:100% 100%;}
+/*.search{display: block; width: 90%; height: 3.5rem; line-height: 3.5rem; text-indent: 1rem; position: absolute; left: 5%; top:18rem; background: url(../images/search.png) no-repeat; background-size:100% 100%;}*/
 .nav{ overflow: hidden; background: #fafafa; padding: 1rem 0;}
 .nav li{ float: left; width: 25%; text-align: center;}
 .nav li a{ color: #666;}
